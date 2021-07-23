@@ -16,6 +16,17 @@ const MeetupDetails = ({ meetupData }) => {
   );
 };
 
+export const getStaticPaths = () => {
+  const meetupsData = DUMMY_ITEMS.map((item) => ({
+    params: { meetupId: item.id },
+  }));
+
+  return {
+    fallback: false, // false se tiver todas as possibilidades a serem carregadas aqui, caso não, true
+    paths: meetupsData,
+  };
+};
+
 export const getStaticProps = (context) => {
   const { meetupId } = context.params;
 
