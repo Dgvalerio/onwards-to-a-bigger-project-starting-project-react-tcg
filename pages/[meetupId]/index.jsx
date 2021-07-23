@@ -1,23 +1,7 @@
-import MeetupDetail from '../../components/meetups/MeetupDetail';
+/* eslint-disable no-underscore-dangle */
+import { MongoClient, ObjectId } from 'mongodb';
 
-const DUMMY_ITEMS = [
-  {
-    id: 'm1',
-    title: 'A First Meetup',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/800px-Stadtbild_M%C3%BCnchen.jpg',
-    address: 'Some address 5, 12345 Some City',
-    description: 'This is a first meetup!',
-  },
-  {
-    id: 'm2',
-    title: 'A Second Meetup',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/800px-Stadtbild_M%C3%BCnchen.jpg',
-    address: 'Some address 10, 12445 Some City',
-    description: 'This is a second meetup!',
-  },
-];
+import MeetupDetail from '../../components/meetups/MeetupDetail';
 
 const MeetupDetails = ({ meetupData }) => {
   const { title, address, description, image } = meetupData;
@@ -34,9 +18,21 @@ const MeetupDetails = ({ meetupData }) => {
   );
 };
 
-export const getStaticPaths = () => {
-  const meetupsData = DUMMY_ITEMS.map((item) => ({
-    params: { meetupId: item.id },
+export const getStaticPaths = async () => {
+  const client = await MongoClient.connect(
+    'mongodb+srv://dgvalerio:eRY1RrtpOPm8xxfQ@cluster0.sshuh.mongodb.net/meetups?retryWrites=true&w=majority'
+  );
+
+  const db = client.db();
+
+  const meetupsCollections = db.collection('meetups');
+
+  const meetups = await meetupsCollections.find({}, { _id: 1 }).toArray();
+
+  await client.close();
+
+  const meetupsData = meetups.map((item) => ({
+    params: { meetupId: item._id.toString() },
   }));
 
   return {
@@ -45,14 +41,33 @@ export const getStaticPaths = () => {
   };
 };
 
-export const getStaticProps = (context) => {
+export const getStaticProps = async (context) => {
   const { meetupId } = context.params;
 
-  const meetupData = DUMMY_ITEMS.find((item) => item.id === meetupId);
+  const client = await MongoClient.connect(
+    'mongodb+srv://dgvalerio:eRY1RrtpOPm8xxfQ@cluster0.sshuh.mongodb.net/meetups?retryWrites=true&w=majority'
+  );
+
+  const db = client.db();
+
+  const meetupsCollections = db.collection('meetups');
+
+  const selectedMeetup = await meetupsCollections.findOne({
+    _id: ObjectId(meetupId),
+  });
+
+  await client.close();
 
   return {
     props: {
-      meetupData,
+      meetupData: {
+        // eslint-disable-next-line no-underscore-dangle
+        id: selectedMeetup._id.toString(),
+        title: selectedMeetup.title,
+        image: selectedMeetup.image,
+        address: selectedMeetup.address,
+        description: selectedMeetup.description,
+      },
     },
   };
 };
