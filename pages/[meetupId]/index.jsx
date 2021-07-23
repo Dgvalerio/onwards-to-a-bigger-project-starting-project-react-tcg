@@ -1,18 +1,14 @@
-import { useRouter } from 'next/router';
-
 import MeetupDetail from '../../components/meetups/MeetupDetail';
-import { DUMMY_ITEMS } from '../index';
 
 const MeetupDetails = () => {
-  const router = useRouter();
-
-  const { meetupId: id } = router.query;
-
-  const { title, address, description, image } = DUMMY_ITEMS.find(
-    (item) => item.id === id
-  );
-
-  if (!id) return <p>Loading...</p>;
+  const { title, address, description, image } = {
+    id: 'm1',
+    title: 'A First Meetup',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/800px-Stadtbild_M%C3%BCnchen.jpg',
+    address: 'Some address 5, 12345 Some City',
+    description: 'This is a first meetup!',
+  };
 
   return (
     <>

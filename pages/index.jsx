@@ -25,6 +25,7 @@ export const getStaticProps = async () => ({
   props: {
     meetups: DUMMY_ITEMS,
   },
+  revalidate: 10, // Time in seconds
 });
 
 export default HomePage;
