@@ -37,7 +37,7 @@ export const getStaticPaths = async () => {
   }));
 
   return {
-    fallback: false, // false se tiver todas as possibilidades a serem carregadas aqui, caso não, true
+    fallback: 'blocking', // false se tiver todas as possibilidades a serem carregadas aqui, caso não, true
     paths: meetupsData,
   };
 };
