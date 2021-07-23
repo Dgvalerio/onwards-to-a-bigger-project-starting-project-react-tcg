@@ -1,22 +1,22 @@
-/* eslint-disable no-underscore-dangle */
 import { MongoClient, ObjectId } from 'mongodb';
+import Head from 'next/head';
 
 import MeetupDetail from '../../components/meetups/MeetupDetail';
 
-const MeetupDetails = ({ meetupData }) => {
-  const { title, address, description, image } = meetupData;
-
-  return (
-    <>
-      <MeetupDetail
-        description={description}
-        address={address}
-        title={title}
-        image={image}
-      />
-    </>
-  );
-};
+const MeetupDetails = ({ title, address, description, image }) => (
+  <>
+    <Head>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+    </Head>
+    <MeetupDetail
+      description={description}
+      address={address}
+      title={title}
+      image={image}
+    />
+  </>
+);
 
 export const getStaticPaths = async () => {
   const client = await MongoClient.connect(
@@ -32,6 +32,7 @@ export const getStaticPaths = async () => {
   await client.close();
 
   const meetupsData = meetups.map((item) => ({
+    // eslint-disable-next-line no-underscore-dangle
     params: { meetupId: item._id.toString() },
   }));
 
@@ -60,14 +61,12 @@ export const getStaticProps = async (context) => {
 
   return {
     props: {
-      meetupData: {
-        // eslint-disable-next-line no-underscore-dangle
-        id: selectedMeetup._id.toString(),
-        title: selectedMeetup.title,
-        image: selectedMeetup.image,
-        address: selectedMeetup.address,
-        description: selectedMeetup.description,
-      },
+      // eslint-disable-next-line no-underscore-dangle
+      id: selectedMeetup._id.toString(),
+      title: selectedMeetup.title,
+      image: selectedMeetup.image,
+      address: selectedMeetup.address,
+      description: selectedMeetup.description,
     },
   };
 };

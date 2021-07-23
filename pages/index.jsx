@@ -1,8 +1,20 @@
 import { MongoClient } from 'mongodb';
+import Head from 'next/head';
 
 import MeetupList from '../components/meetups/MeetupList';
 
-const HomePage = ({ meetups }) => <MeetupList meetups={meetups} />;
+const HomePage = ({ meetups }) => (
+  <>
+    <Head>
+      <title>React Meetups</title>
+      <meta
+        name="description"
+        content="Browser page list of highly active React meetups!"
+      />
+    </Head>
+    <MeetupList meetups={meetups} />
+  </>
+);
 
 // export const getServerSideProps = async (context) => {
 //   const { req } = context;
