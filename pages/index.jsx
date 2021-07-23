@@ -1,6 +1,6 @@
 import MeetupList from '../components/meetups/MeetupList';
 
-const DUMMY_ITEMS = [
+export const DUMMY_ITEMS = [
   {
     id: 'm1',
     title: 'A First Meetup',
